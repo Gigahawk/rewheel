@@ -13,4 +13,3 @@ warningMessage2: ⚠️ It is not recommended to use this tool for anything othe
 flashAction: Flash Update
 timeoutError: Connection to the Onewheel timed out
 updateErrorMessage: Update Error - {{error}}
-unlockSuccess: FWU Unlocked
