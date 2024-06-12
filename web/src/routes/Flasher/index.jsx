@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Button, LinearProgress } from "@mui/material"
+import { Card, CardContent, CardHeader, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { Flasher } from "./Flasher"
 import { useFirmwareLoader, useOnewheel } from "@hooks"
