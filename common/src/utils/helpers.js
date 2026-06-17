@@ -1,3 +1,5 @@
+import CryptoJS from "crypto-js"
+
 export const nop = [0x00, 0xbf]
 
 export const PRE_GT_OTA_LENGTH = 0xfd00
@@ -37,11 +39,30 @@ export const toHexString = (number) => {
   return number.toString(16)
 }
 
+const algoMap = {
+  "SHA-1": CryptoJS.SHA1,
+  "SHA-256": CryptoJS.SHA256,
+  "SHA-384": CryptoJS.SHA384,
+  "SHA-512": CryptoJS.SHA512,
+}
+
 export const toHashString = async (algorithm, data) => {
-  const hashBuffer = await crypto.subtle.digest(algorithm, data)
-  let asArray = new Uint8Array(hashBuffer)
-  asArray = [...asArray]
-  return asArray.map((c) => toHexString(c)).join("")
+  const hashFn = algoMap[algorithm]
+  if (!hashFn) throw new Error(`Unsupported algorithm: ${algorithm}`)
+
+  const wordArray = CryptoJS.lib.WordArray.create(data)
+  const hash = hashFn(wordArray)
+  const hashString = hash.toString(CryptoJS.enc.Hex)
+  // HACK: Original crypto.subtle implementation used toHexString
+  // which does not properly zero pad outputs.
+  // There are hardcoded hashes elsewhere that rely on this behavior
+  // Reparse the generated string to recreate this bug
+  const hashBytes = []
+  for (let i = 0; i < hashString.length; i += 2) {
+    hashBytes.push(parseInt(hashString.slice(i, i + 2), 16))
+  }
+
+  return hashBytes.map((c) => toHexString(c)).join("")
 }
 
 export const uintByteArray = (value, length, littleEndian) => {
