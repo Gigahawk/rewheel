@@ -1,4 +1,4 @@
-import { BSS_LOCATIONS } from "@rewheel/common/src/utils/helpers"
+import { BSS_LOCATIONS } from "@rewheel/common/src/utils/helpers.js"
 
 export const applyPatch = (firmware, revision, patch, lastByteIndex, bssEndIndex, isGT, args) => {
   let modifications = []
